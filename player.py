@@ -1,14 +1,14 @@
 import logging
+from utilities import lowest_consecutive
 
-def lowest_consecutive(list: list[int]) -> list[int]:
-    return [item for i, item in enumerate(sorted(list)) if i != len(list) - 1 and item + 1 != list[i + 1]]
 
 class Player:
-    def __init__(self, player_number: int, name: str):
+    def __init__(self, player_number: int, agent):
         self.id = player_number  # Starting from 0
-        self.name = name
+        self.name = agent.name
         self.coins = 11
         self.played_cards: list[int] = []
+        self.agent = agent
 
     def must_take(self) -> bool:
         return self.coins <= 0
@@ -16,7 +16,12 @@ class Player:
     def should_take(
         self, card: int, pot: int, other_players: list["Player"], deck_size: int
     ) -> bool:
-        return self.must_take()
+        agent_play = self.agent.should_take(self, card, pot, other_players, deck_size)
+
+        if self.must_take() and agent_play != True:
+            logging.warning(f"{self.identify()} attempted to skip with no coins")
+
+        return self.must_take() or agent_play
 
     def take_card(self, card, pot) -> None:
         self.played_cards.append(card)

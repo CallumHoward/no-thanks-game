@@ -2,32 +2,27 @@ import logging
 from random import shuffle, choice
 from itertools import cycle
 from player import Player
+from utilities import rotate
+from agents.agent1 import Agent as Agent1
+from agents.agent2 import Agent as Agent2
+from agents.agent3 import Agent as Agent3
+from agents.agent4 import Agent as Agent4
 
 root = logging.getLogger()
 logging.basicConfig(format="[%(relativeCreated)04d:%(module)s] %(message)s")
 
-num_players = 4
+agent_instances = [Agent1(), Agent2(), Agent3(), Agent4()]
 all_cards = list(range(3, 35))
 num_cards_to_remove = 9
 
-default_agent_names = [
-    "Alice",
-    "Bob",
-    "Charlie",
-    "David"
-]
 
-def rotate(list, offset):
-    return list[offset:] + list[:offset]
-
-
-def play(agent_names: list[str] = default_agent_names, log_level = logging.INFO) -> str:
+def play(agents, log_level = logging.INFO) -> str:
     root.setLevel(log_level)
     logging.info("Setting up")
     deck = all_cards
     shuffle(deck)
     deck = deck[:num_cards_to_remove]
-    players = list(Player(i, agent_names[i]) for i in range(num_players))
+    players = list(Player(i, agent) for i, agent in enumerate(agents))
 
     current_player = choice(players)
     pot = 0
@@ -63,4 +58,4 @@ def play(agent_names: list[str] = default_agent_names, log_level = logging.INFO)
     return winner
 
 if __name__ == "__main__":
-    play()
+    play(agent_instances)
