@@ -21,4 +21,7 @@ python stats.py
 ```
 
 ## Developing
-To add your own AI, simply replace one of the agent files in `/agents`. An agent is required to have a `name` (string) property and a method: `should_take` which returns a boolean `True` or `False`. See the files within `/agents` for examples.
+To add your own AI, simply replace one of the agent files in `/agents`. An agent is required to have a `name` (string) property and a method: `should_take` which returns a boolean `True` or `False`. See the files within `/agents` for examples. Feel free to rename your agent to be unique!
+
+## Todo
+- [ ] Create a GitHub action to run the tournament and output results
