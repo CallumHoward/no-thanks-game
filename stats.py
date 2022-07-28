@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import logging
+from random import shuffle
 from game import play
 from agents.agent1 import Agent as Agent1
 from agents.agent2 import Agent as Agent2
@@ -16,6 +17,7 @@ def run():
 
     agent_wins = {name: 0 for name in agent_names}
     for _ in range(NUM_SAMPLES):
+        shuffle(agents)
         winner = play(agents, logging.WARNING)
         agent_wins[winner] += 1
 

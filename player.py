@@ -1,4 +1,5 @@
 import logging
+from copy import deepcopy
 from utilities import lowest_consecutive
 
 
@@ -16,7 +17,12 @@ class Player:
     def should_take(
         self, card: int, pot: int, other_players: list["Player"], deck_size: int
     ) -> bool:
-        agent_play = self.agent.should_take(self, card, pot, other_players, deck_size)
+        other_players_limited = deepcopy(other_players)
+        for player in other_players_limited:
+            player.coins = None
+            player.agent = None
+
+        agent_play = self.agent.should_take(self, card, pot, other_players_limited, deck_size)
 
         if self.must_take() and agent_play != True:
             logging.warning(f"{self.identify()} attempted to skip with no coins")
@@ -26,7 +32,7 @@ class Player:
     def take_card(self, card, pot) -> None:
         self.played_cards.append(card)
         self.played_cards.sort()
-        logging.info(f"Player {self.id} has {self.played_cards} cards")
+        logging.info(f"{self.identify()} has {self.played_cards} cards")
         self.coins += pot
         logging.info(f"Player {self.id} has {self.coins} coins")
 
